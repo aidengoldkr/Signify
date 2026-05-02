@@ -23,8 +23,11 @@ export function useCamera(): UseCameraResult {
 
     async function start() {
       try {
+        const isMobile = window.innerWidth <= 900;
         stream = await navigator.mediaDevices.getUserMedia({
-          video: { width: 1280, height: 720, facingMode: 'user' },
+          video: isMobile
+            ? { width: { ideal: 640 }, height: { ideal: 480 }, facingMode: 'user' }
+            : { width: { ideal: 1280 }, height: { ideal: 720 }, facingMode: 'user' },
           audio: false,
         });
         if (cancelled) {
