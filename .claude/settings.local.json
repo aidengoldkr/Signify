@@ -1,0 +1,13 @@
+{
+  "permissions": {
+    "allow": [
+      "Read(//c/project/**)",
+      "Bash(npm create *)",
+      "Bash(npm install *)",
+      "Bash(curl -L -o /c/project/signify/public/models/hand_landmarker.task https://storage.googleapis.com/mediapipe-models/hand_landmarker/hand_landmarker/float16/latest/hand_landmarker.task -s -w \"HTTP %{http_code} %{size_download} bytes\\\\n\")",
+      "Bash(npm run *)",
+      "Bash(curl -s -o /dev/null -w \"index.html: HTTP %{http_code}\\\\n\" http://localhost:5173/)",
+      "Bash(curl -s -o /dev/null -w \"model: HTTP %{http_code} %{size_download} bytes\\\\n\" http://localhost:5173/models/hand_landmarker.task)"
+    ]
+  }
+}

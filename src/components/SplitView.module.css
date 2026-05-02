@@ -1,0 +1,80 @@
+.shell {
+  display: grid;
+  grid-template-columns: var(--left-fr, 0.6fr) 8px var(--right-fr, 0.4fr);
+  height: 100vh;
+  width: 100vw;
+  background: var(--bg);
+  color: var(--fg);
+}
+
+.leftPane {
+  position: relative;
+  overflow: hidden;
+  background: #000;
+  min-width: 0;
+}
+
+.divider {
+  position: relative;
+  cursor: ew-resize;
+  background: rgba(255, 255, 255, 0.04);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 150ms;
+  touch-action: none;
+}
+
+.divider:hover,
+.divider:active {
+  background: rgba(212, 160, 23, 0.25);
+}
+
+.dividerHandle {
+  width: 2px;
+  height: 56px;
+  border-radius: 2px;
+  background: rgba(255, 255, 255, 0.25);
+  pointer-events: none;
+}
+
+.divider:hover .dividerHandle,
+.divider:active .dividerHandle {
+  background: var(--accent);
+  height: 80px;
+}
+
+.rightPane {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  padding: var(--pad-lg);
+  background: var(--surface);
+  border-left: 1px solid rgba(255, 255, 255, 0.04);
+  min-height: 0;
+  min-width: 0;
+  overflow: hidden;
+}
+
+@media (max-width: 900px) {
+  .shell {
+    grid-template-columns: 1fr;
+    grid-template-rows: 60vh 8px 40vh;
+  }
+  .divider {
+    cursor: ns-resize;
+  }
+  .dividerHandle {
+    width: 56px;
+    height: 2px;
+  }
+  .divider:hover .dividerHandle,
+  .divider:active .dividerHandle {
+    width: 80px;
+    height: 2px;
+  }
+  .rightPane {
+    border-left: none;
+    border-top: 1px solid rgba(255, 255, 255, 0.04);
+  }
+}

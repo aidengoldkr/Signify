@@ -1,0 +1,257 @@
+.panel {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  min-height: 0;
+  width: 100%;
+  gap: var(--pad-md);
+  font-family: var(--font-display);
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.title {
+  margin: 0;
+  font-size: 28px;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+}
+
+.close {
+  font-size: 26px;
+  color: var(--fg-dim);
+  width: 48px;
+  height: 48px;
+  border-radius: 8px;
+}
+
+.close:hover {
+  color: var(--fg);
+  background: rgba(255, 255, 255, 0.05);
+}
+
+.preview {
+  display: flex;
+  align-items: center;
+  gap: var(--pad-md);
+  padding: 18px var(--pad-md);
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  border-radius: 10px;
+  min-height: 80px;
+}
+
+.previewLabel {
+  font-family: var(--font-mono);
+  font-size: 13px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--fg-dim);
+}
+
+.previewText {
+  flex: 1;
+  font-size: 26px;
+  color: var(--fg);
+  font-weight: 600;
+}
+
+.previewStage {
+  font-family: var(--font-mono);
+  font-size: 16px;
+  color: var(--accent);
+}
+
+.list {
+  flex: 1;
+  min-height: 0;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: var(--pad-md);
+  padding-right: 8px;
+  margin-right: -8px;
+}
+
+.list::-webkit-scrollbar {
+  width: 10px;
+}
+.list::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.18);
+  border-radius: 5px;
+}
+
+.keyBlock {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding: var(--pad-md);
+  background: rgba(255, 255, 255, 0.02);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  border-radius: 10px;
+}
+
+.keyHeader {
+  display: flex;
+  align-items: center;
+  gap: var(--pad-sm);
+}
+
+.keyBadge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 44px;
+  height: 44px;
+  border-radius: 8px;
+  background: var(--accent);
+  color: #000;
+  font-family: var(--font-mono);
+  font-size: 22px;
+  font-weight: 700;
+}
+
+.keyMeta {
+  font-family: var(--font-mono);
+  font-size: 14px;
+  color: var(--fg-dim);
+  letter-spacing: 0.06em;
+}
+
+.stages {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.stage {
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  align-items: center;
+  gap: 12px;
+}
+
+.delayWrap {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 8px;
+  padding: 0 14px;
+}
+
+.delay {
+  width: 90px;
+  background: transparent;
+  border: none;
+  padding: 14px 0;
+  font-family: var(--font-mono);
+  font-size: 20px;
+  text-align: right;
+  color: var(--fg);
+}
+
+.delay:focus {
+  outline: none;
+}
+
+.delay::-webkit-inner-spin-button,
+.delay::-webkit-outer-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+.unit {
+  font-family: var(--font-display);
+  font-size: 16px;
+  color: var(--fg-dim);
+  font-weight: 500;
+}
+
+.text {
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 8px;
+  padding: 14px 18px;
+  font-family: var(--font-display);
+  font-size: 20px;
+  color: var(--fg);
+  min-width: 0;
+}
+
+.text:focus,
+.delay:focus-within {
+  outline: none;
+}
+
+.delayWrap:focus-within,
+.text:focus {
+  border-color: var(--accent);
+}
+
+.remove {
+  width: 48px;
+  height: 48px;
+  border-radius: 8px;
+  color: var(--fg-dim);
+  font-size: 26px;
+}
+
+.remove:hover {
+  color: var(--error);
+  background: rgba(229, 115, 115, 0.1);
+}
+
+.addStage {
+  font-family: var(--font-display);
+  font-size: 16px;
+  font-weight: 500;
+  color: var(--accent);
+  padding: 14px;
+  border: 1px dashed rgba(212, 160, 23, 0.35);
+  border-radius: 8px;
+  margin-top: 6px;
+}
+
+.addStage:hover {
+  background: rgba(212, 160, 23, 0.08);
+  border-color: var(--accent);
+}
+
+.footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: var(--pad-md);
+  padding-top: var(--pad-md);
+  border-top: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+.reset {
+  font-family: var(--font-display);
+  font-size: 16px;
+  font-weight: 500;
+  color: var(--fg-dim);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 8px;
+  padding: 12px 20px;
+}
+
+.reset:hover {
+  color: var(--fg);
+  border-color: rgba(255, 255, 255, 0.22);
+}
+
+.hint {
+  font-family: var(--font-mono);
+  font-size: 13px;
+  color: var(--fg-dim);
+}

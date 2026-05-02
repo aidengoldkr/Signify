@@ -1,0 +1,21 @@
+:root {
+  --bg: #0a0a0a;
+  --surface: #141414;
+  --fg: #f5f1e8;
+  --fg-dim: rgba(245, 241, 232, 0.55);
+  --accent: #d4a017;
+  --landmark-left: #6ec1e4;
+  --landmark-right: #d4a017;
+  --landmark-bone: rgba(255, 255, 255, 0.4);
+  --status-manual: #d4a017;
+  --status-ai: #6ec1e4;
+  --status-idle: rgba(245, 241, 232, 0.3);
+  --error: #e57373;
+
+  --font-display: 'Pretendard Variable', Pretendard, system-ui, -apple-system, 'Segoe UI', sans-serif;
+  --font-mono: 'Pretendard Variable', Pretendard, ui-monospace, 'JetBrains Mono', monospace;
+
+  --pad-lg: 48px;
+  --pad-md: 24px;
+  --pad-sm: 12px;
+}

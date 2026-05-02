@@ -1,0 +1,16 @@
+.footerRow {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: var(--pad-md);
+}
+
+.recordLink {
+  color: var(--accent);
+  text-decoration: none;
+  font-family: var(--font-mono);
+}
+
+.recordLink:hover {
+  text-decoration: underline;
+}
