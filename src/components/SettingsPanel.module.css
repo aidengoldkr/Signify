@@ -80,6 +80,7 @@
 .list::-webkit-scrollbar {
   width: 10px;
 }
+
 .list::-webkit-scrollbar-thumb {
   background: rgba(255, 255, 255, 0.18);
   border-radius: 5px;
@@ -98,7 +99,32 @@
 .keyHeader {
   display: flex;
   align-items: center;
+  justify-content: space-between;
   gap: var(--pad-sm);
+}
+
+.keyHeaderLeft {
+  display: flex;
+  align-items: center;
+  gap: var(--pad-sm);
+}
+
+.playButton {
+  font-family: var(--font-display);
+  font-size: 14px;
+  font-weight: 600;
+  color: #fff;
+  background: var(--accent);
+  color: #000;
+  padding: 8px 16px;
+  border-radius: 6px;
+  border: none;
+  cursor: pointer;
+  transition: opacity 0.2s;
+}
+
+.playButton:hover {
+  opacity: 0.8;
 }
 
 .keyBadge {
@@ -235,6 +261,30 @@
   border-top: 1px solid rgba(255, 255, 255, 0.06);
 }
 
+.footerActions {
+  display: flex;
+  gap: var(--pad-sm);
+  align-items: center;
+}
+
+.clearOutputBtn {
+  font-family: var(--font-display);
+  font-size: 16px;
+  font-weight: 500;
+  color: var(--error);
+  border: 1px solid rgba(229, 115, 115, 0.2);
+  border-radius: 8px;
+  padding: 12px 20px;
+  background: transparent;
+  display: none;
+  /* Only show on mobile */
+  cursor: pointer;
+}
+
+.clearOutputBtn:hover {
+  background: rgba(229, 115, 115, 0.1);
+}
+
 .reset {
   font-family: var(--font-display);
   font-size: 16px;
@@ -254,4 +304,98 @@
   font-family: var(--font-mono);
   font-size: 13px;
   color: var(--fg-dim);
+}
+
+@media (max-width: 900px) {
+  .panel {
+    gap: var(--pad-sm);
+  }
+
+  .title {
+    font-size: 22px;
+  }
+
+  .close {
+    width: 36px;
+    height: 36px;
+    font-size: 20px;
+  }
+
+  .preview {
+    display: none;
+    min-height: 60px;
+    padding: 12px var(--pad-sm);
+    gap: var(--pad-sm);
+  }
+
+  .previewText {
+    font-size: 20px;
+  }
+
+  .keyBlock {
+    padding: var(--pad-sm);
+    gap: 8px;
+  }
+
+  .keyBadge {
+    width: 36px;
+    height: 36px;
+    font-size: 18px;
+  }
+
+  .playButton {
+    padding: 6px 12px;
+    font-size: 12px;
+  }
+
+  .stage {
+    gap: 8px;
+  }
+
+  .delayWrap {
+    padding: 0 10px;
+  }
+
+  .delay {
+    width: 60px;
+    padding: 10px 0;
+    font-size: 16px;
+  }
+
+  .unit {
+    font-size: 14px;
+  }
+
+  .text {
+    padding: 10px 14px;
+    font-size: 16px;
+  }
+
+  .remove {
+    width: 36px;
+    height: 36px;
+    font-size: 22px;
+  }
+
+  .addStage {
+    padding: 10px;
+    font-size: 14px;
+  }
+
+  .footer {
+    padding-top: var(--pad-sm);
+    gap: var(--pad-sm);
+  }
+
+  .clearOutputBtn {
+    display: block;
+    padding: 10px 16px;
+    font-size: 14px;
+  }
+
+  .reset {
+    display: none;
+    padding: 10px 16px;
+    font-size: 14px;
+  }
 }

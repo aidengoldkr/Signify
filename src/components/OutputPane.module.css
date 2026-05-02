@@ -16,20 +16,24 @@
 }
 
 .gear {
-  width: 40px;
-  height: 40px;
+  width: 28px;
+  height: 28px;
   border-radius: 6px;
-  font-size: 22px;
+  font-size: 16px;
   color: var(--fg-dim);
   display: flex;
   align-items: center;
   justify-content: center;
   line-height: 1;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  transition: all 150ms;
 }
 
 .gear:hover {
   color: var(--fg);
-  background: rgba(255, 255, 255, 0.06);
+  background: rgba(255, 255, 255, 0.1);
 }
 
 .textWrap {
@@ -71,10 +75,22 @@
   color: var(--status-idle);
 }
 
+.footerWrap {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding-top: var(--pad-sm);
+  border-top: 1px solid rgba(255, 255, 255, 0.06);
+}
+
 .footer {
   font-family: var(--font-mono);
   font-size: 12px;
   color: var(--fg-dim);
-  padding-top: var(--pad-sm);
-  border-top: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+@media (max-width: 900px) {
+  .wrap {
+    position: relative;
+  }
 }

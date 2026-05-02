@@ -3,15 +3,25 @@ import styles from './OutputPane.module.css';
 
 interface OutputPaneProps {
   text: string;
-  status: ReactNode;
   footer?: ReactNode;
   onOpenSettings?: () => void;
 }
 
-export function OutputPane({ text, status, footer, onOpenSettings }: OutputPaneProps) {
+export function OutputPane({ text, footer, onOpenSettings }: OutputPaneProps) {
   return (
     <div className={styles.wrap}>
       <div className={styles.statusRow}>
+        <div className={styles.spacer} />
+      </div>
+      <div className={styles.textWrap}>
+        {text ? (
+          <p key={text} className={styles.text}>{text}</p>
+        ) : (
+          <p className={styles.placeholder}>…</p>
+        )}
+      </div>
+      <div className={styles.footerWrap}>
+        {footer && <div className={styles.footer}>{footer}</div>}
         {onOpenSettings && (
           <button
             className={styles.gear}
@@ -22,17 +32,7 @@ export function OutputPane({ text, status, footer, onOpenSettings }: OutputPaneP
             ⚙
           </button>
         )}
-        <div className={styles.spacer} />
-        {status}
       </div>
-      <div className={styles.textWrap}>
-        {text ? (
-          <p key={text} className={styles.text}>{text}</p>
-        ) : (
-          <p className={styles.placeholder}>…</p>
-        )}
-      </div>
-      {footer && <div className={styles.footer}>{footer}</div>}
     </div>
   );
 }

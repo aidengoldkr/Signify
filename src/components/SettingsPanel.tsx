@@ -14,6 +14,8 @@ interface SettingsPanelProps {
   previewText: string | null;
   previewStageIndex: number;
   previewTotalStages: number;
+  onPlay: (key: string) => void;
+  onClearOutput: () => void;
 }
 
 const KEYS = ['1', '2', '3', '4', '5', '6', '7', '8', '9'] as const;
@@ -49,6 +51,8 @@ export function SettingsPanel({
   previewText,
   previewStageIndex,
   previewTotalStages,
+  onPlay,
+  onClearOutput,
 }: SettingsPanelProps) {
   function updateKey(key: string, stages: Stage[]) {
     onChange({ ...overrides, [key]: stagesToSequence(stages) });
@@ -82,15 +86,20 @@ export function SettingsPanel({
             keyLabel={k}
             stages={sequenceToStages(overrides[k] ?? [])}
             onChange={(s) => updateKey(k, s)}
+            onPlay={() => onPlay(k)}
           />
         ))}
       </div>
 
       <footer className={styles.footer}>
-        <button className={styles.reset} onClick={onReset}>
-          기본값으로 초기화
-        </button>
-        <span className={styles.hint}>변경은 자동 저장됩니다</span>
+        <div className={styles.footerActions}>
+          <button className={styles.clearOutputBtn} onClick={onClearOutput}>
+            출력 초기화
+          </button>
+          <button className={styles.reset} onClick={onReset}>
+            기본값으로 초기화
+          </button>
+        </div>
       </footer>
     </div>
   );
@@ -100,9 +109,10 @@ interface KeyEditorProps {
   keyLabel: string;
   stages: Stage[];
   onChange: (stages: Stage[]) => void;
+  onPlay: () => void;
 }
 
-function KeyEditor({ keyLabel, stages, onChange }: KeyEditorProps) {
+function KeyEditor({ keyLabel, stages, onChange, onPlay }: KeyEditorProps) {
   function updateStage(idx: number, patch: Partial<Stage>) {
     onChange(stages.map((s, i) => (i === idx ? { ...s, ...patch } : s)));
   }
@@ -117,7 +127,17 @@ function KeyEditor({ keyLabel, stages, onChange }: KeyEditorProps) {
   return (
     <section className={styles.keyBlock}>
       <header className={styles.keyHeader}>
-        <span className={styles.keyBadge}>{keyLabel}</span>
+        <div className={styles.keyHeaderLeft}>
+          <span className={styles.keyBadge}>{keyLabel}</span>
+          <button
+            className={styles.playButton}
+            onClick={onPlay}
+            title="이 시퀀스 재생"
+            aria-label="이 시퀀스 재생"
+          >
+            ▶ 플레이
+          </button>
+        </div>
         <span className={styles.keyMeta}>
           {stages.length === 0 ? '비어 있음' : `${stages.length}단계`}
         </span>

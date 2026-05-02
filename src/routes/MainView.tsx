@@ -3,7 +3,6 @@ import type { HandFrame } from '@/types/gesture';
 import { SplitView } from '@/components/SplitView';
 import { ViewportPane } from '@/components/ViewportPane';
 import { OutputPane } from '@/components/OutputPane';
-import { StatusPill } from '@/components/StatusPill';
 import { SettingsPanel } from '@/components/SettingsPanel';
 import { useCamera } from '@/hooks/useCamera';
 import { useMediaPipe } from '@/hooks/useMediaPipe';
@@ -25,7 +24,7 @@ function loadOverrides(): Record<string, OverrideSequence> {
     if (parsed && typeof parsed === 'object') {
       return parsed as Record<string, OverrideSequence>;
     }
-  } catch {}
+  } catch { }
   return defaultOverrides;
 }
 
@@ -37,7 +36,7 @@ function loadLeftRatio(): number {
       const r = parsed?.leftRatio;
       if (typeof r === 'number' && r >= 0.2 && r <= 0.9) return r;
     }
-  } catch {}
+  } catch { }
   return 0.6;
 }
 
@@ -55,18 +54,18 @@ export function MainView() {
   useEffect(() => {
     try {
       localStorage.setItem(STORAGE_KEY, JSON.stringify(currentOverrides));
-    } catch {}
+    } catch { }
   }, [currentOverrides]);
 
   useEffect(() => {
     try {
       localStorage.setItem(LAYOUT_KEY, JSON.stringify({ leftRatio }));
-    } catch {}
+    } catch { }
   }, [leftRatio]);
 
   const library = useMemo(() => prepareLibrary(snapshots), []);
   const { result, pushHands } = useGestureMatcher({ library });
-  const { override, stageIndex, totalStages } = useKeyboardOverride({
+  const { override, stageIndex, totalStages, playKey, clear: clearOverride } = useKeyboardOverride({
     map: currentOverrides,
   });
 
@@ -142,11 +141,18 @@ export function MainView() {
             previewText={override}
             previewStageIndex={stageIndex}
             previewTotalStages={totalStages}
+            onPlay={(key) => {
+              playKey(key);
+              setShowSettings(false);
+            }}
+            onClearOutput={() => {
+              clearOverride();
+              setShowSettings(false);
+            }}
           />
         ) : (
           <OutputPane
             text={displayText}
-            status={<StatusPill kind={statusKind} label={statusLabel} />}
             footer={footer}
             onOpenSettings={() => setShowSettings(true)}
           />

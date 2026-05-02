@@ -31,8 +31,17 @@ export function SplitView({
     const container = containerRef.current;
     if (!container) return;
     const rect = container.getBoundingClientRect();
-    if (rect.width <= 0) return;
-    const raw = (e.clientX - rect.left) / rect.width;
+    const isMobile = window.matchMedia('(max-width: 900px)').matches;
+    
+    let raw = 0;
+    if (isMobile) {
+      if (rect.height <= 0) return;
+      raw = (e.clientY - rect.top) / rect.height;
+    } else {
+      if (rect.width <= 0) return;
+      raw = (e.clientX - rect.left) / rect.width;
+    }
+    
     const clamped = Math.max(MIN_RATIO, Math.min(MAX_RATIO, raw));
     onRatioChange(clamped);
   };
@@ -47,6 +56,8 @@ export function SplitView({
   const cssVars = {
     '--left-fr': `${leftRatio}fr`,
     '--right-fr': `${1 - leftRatio}fr`,
+    '--top-fr': `${leftRatio}fr`,
+    '--bottom-fr': `${1 - leftRatio}fr`,
   } as React.CSSProperties;
 
   return (

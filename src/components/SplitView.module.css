@@ -59,22 +59,27 @@
 @media (max-width: 900px) {
   .shell {
     grid-template-columns: 1fr;
-    grid-template-rows: 60vh 8px 40vh;
+    grid-template-rows: var(--top-fr, 0.6fr) 8px var(--bottom-fr, 0.4fr);
   }
+
   .divider {
     cursor: ns-resize;
   }
+
   .dividerHandle {
     width: 56px;
     height: 2px;
   }
+
   .divider:hover .dividerHandle,
   .divider:active .dividerHandle {
     width: 80px;
     height: 2px;
   }
+
   .rightPane {
     border-left: none;
     border-top: 1px solid rgba(255, 255, 255, 0.04);
+    padding: 18px 36px 18px 36px;
   }
 }

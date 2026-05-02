@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef, useState, useCallback } from 'react';
 import type { OverrideSequence } from '@/data/overrides';
 
 interface UseKeyboardOverrideOptions {
@@ -10,6 +10,7 @@ interface UseKeyboardOverrideResult {
   stageIndex: number;
   totalStages: number;
   clear: () => void;
+  playKey: (key: string) => void;
 }
 
 interface ParsedStage {
@@ -52,41 +53,48 @@ export function useKeyboardOverride({
   const [totalStages, setTotalStages] = useState(0);
   const timersRef = useRef<number[]>([]);
 
-  useEffect(() => {
-    function cancelTimers() {
-      for (const id of timersRef.current) window.clearTimeout(id);
-      timersRef.current = [];
-    }
+  const cancelTimers = useCallback(() => {
+    for (const id of timersRef.current) window.clearTimeout(id);
+    timersRef.current = [];
+  }, []);
 
-    function clearAll() {
-      cancelTimers();
-      setOverride(null);
-      setStageIndex(0);
-      setTotalStages(0);
-    }
+  const clearAll = useCallback(() => {
+    cancelTimers();
+    setOverride(null);
+    setStageIndex(0);
+    setTotalStages(0);
+  }, [cancelTimers]);
 
-    function play(seq: OverrideSequence) {
-      cancelTimers();
-      const stages = parseSequence(seq);
-      if (stages.length === 0) {
-        clearAll();
+  const playSequence = useCallback((seq: OverrideSequence) => {
+    cancelTimers();
+    const stages = parseSequence(seq);
+    if (stages.length === 0) {
+      clearAll();
+      return;
+    }
+    setTotalStages(stages.length);
+    stages.forEach((stage, i) => {
+      if (stage.cumulativeDelayMs <= 0) {
+        setOverride(stage.text);
+        setStageIndex(i);
         return;
       }
-      setTotalStages(stages.length);
-      stages.forEach((stage, i) => {
-        if (stage.cumulativeDelayMs <= 0) {
-          setOverride(stage.text);
-          setStageIndex(i);
-          return;
-        }
-        const id = window.setTimeout(() => {
-          setOverride(stage.text);
-          setStageIndex(i);
-        }, stage.cumulativeDelayMs);
-        timersRef.current.push(id);
-      });
-    }
+      const id = window.setTimeout(() => {
+        setOverride(stage.text);
+        setStageIndex(i);
+      }, stage.cumulativeDelayMs);
+      timersRef.current.push(id);
+    });
+  }, [cancelTimers, clearAll]);
 
+  const playKey = useCallback((key: string) => {
+    const seq = map[key];
+    if (seq && seq.length > 0) {
+      playSequence(seq);
+    }
+  }, [map, playSequence]);
+
+  useEffect(() => {
     function onKey(e: KeyboardEvent) {
       if (e.repeat) return;
       if (isEditableTarget(e.target)) return;
@@ -97,7 +105,7 @@ export function useKeyboardOverride({
       const seq = map[e.key];
       if (seq && seq.length > 0) {
         e.preventDefault();
-        play(seq);
+        playSequence(seq);
       }
     }
 
@@ -106,18 +114,13 @@ export function useKeyboardOverride({
       window.removeEventListener('keydown', onKey);
       cancelTimers();
     };
-  }, [map]);
+  }, [map, playSequence, clearAll, cancelTimers]);
 
   return {
     override,
     stageIndex,
     totalStages,
-    clear: () => {
-      for (const id of timersRef.current) window.clearTimeout(id);
-      timersRef.current = [];
-      setOverride(null);
-      setStageIndex(0);
-      setTotalStages(0);
-    },
+    clear: clearAll,
+    playKey,
   };
 }
