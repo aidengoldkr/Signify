@@ -92,18 +92,6 @@ export function MainView() {
     override ??
     (result.kind === 'match' ? result.label : '');
 
-  const statusKind: 'manual' | 'ai' | 'idle' =
-    override !== null ? 'manual' : result.kind === 'match' ? 'ai' : 'idle';
-
-  const statusLabel =
-    override !== null
-      ? totalStages > 1
-        ? `MANUAL ${stageIndex + 1}/${totalStages}`
-        : 'MANUAL'
-      : result.kind === 'match'
-        ? `AI ${result.score.toFixed(2)}`
-        : 'IDLE';
-
   const loadingLabel =
     !cameraReady && !cameraError
       ? '카메라 준비 중...'
