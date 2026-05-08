@@ -9,6 +9,7 @@ interface ViewportPaneProps {
   loadingLabel?: string | null;
   errorLabel?: string | null;
   onToggleCamera?: () => void;
+  facingMode?: 'user' | 'environment';
 }
 
 export function ViewportPane({
@@ -17,6 +18,7 @@ export function ViewportPane({
   loadingLabel,
   errorLabel,
   onToggleCamera,
+  facingMode = 'user',
 }: ViewportPaneProps) {
   const [dims, setDims] = useState<{ w: number; h: number }>({ w: 1280, h: 720 });
 
@@ -37,7 +39,7 @@ export function ViewportPane({
     <div className={styles.wrap}>
       <video
         ref={videoRef}
-        className={styles.video}
+        className={`${styles.video} ${facingMode === 'user' ? styles.mirrored : ''}`}
         autoPlay
         muted
         playsInline

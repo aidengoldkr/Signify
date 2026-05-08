@@ -1,17 +1,8 @@
-import { useState, useEffect, useRef } from 'react';
-import { Link } from 'react-router-dom';
-import { SplitView } from '@/components/SplitView';
-import { OutputPane } from '@/components/OutputPane';
-import { STTPane } from '@/components/STTPane';
-import styles from './MainView.module.css';
+import { useState, useEffect, useRef, useCallback } from 'react';
 
-// Add type definition for SpeechRecognition
 interface SpeechRecognitionEvent extends Event {
   results: SpeechRecognitionResultList;
-}
-
-interface SpeechRecognitionErrorEvent extends Event {
-  error: string;
+  resultIndex: number;
 }
 
 interface SpeechRecognition extends EventTarget {
@@ -21,26 +12,18 @@ interface SpeechRecognition extends EventTarget {
   start: () => void;
   stop: () => void;
   onresult: (event: SpeechRecognitionEvent) => void;
-  onerror: (event: SpeechRecognitionErrorEvent) => void;
+  onerror: (event: any) => void;
   onend: () => void;
 }
 
-declare global {
-  interface Window {
-    SpeechRecognition: any;
-    webkitSpeechRecognition: any;
-  }
-}
-
-export function STTView() {
+export function useSTT() {
   const [isRecording, setIsRecording] = useState(false);
   const [transcript, setTranscript] = useState('');
   const [status, setStatus] = useState<string | null>(null);
   const recognitionRef = useRef<SpeechRecognition | null>(null);
-  const [leftRatio, setLeftRatio] = useState(0.6);
 
   useEffect(() => {
-    const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+    const SpeechRecognition = (window as any).SpeechRecognition || (window as any).webkitSpeechRecognition;
     
     if (SpeechRecognition) {
       const recognition = new SpeechRecognition();
@@ -48,7 +31,7 @@ export function STTView() {
       recognition.interimResults = true;
       recognition.lang = 'ko-KR';
 
-      recognition.onresult = (event: any) => {
+      recognition.onresult = (event: SpeechRecognitionEvent) => {
         let currentTranscript = '';
         for (let i = event.resultIndex; i < event.results.length; i++) {
           currentTranscript += event.results[i][0].transcript;
@@ -68,7 +51,7 @@ export function STTView() {
 
       recognitionRef.current = recognition;
     } else {
-      setStatus('Speech Recognition not supported in this browser.');
+      setStatus('Speech Recognition not supported');
     }
 
     return () => {
@@ -78,47 +61,19 @@ export function STTView() {
     };
   }, []);
 
-  const toggleRecording = () => {
+  const toggleRecording = useCallback(() => {
     if (!recognitionRef.current) return;
 
     if (isRecording) {
       recognitionRef.current.stop();
       setIsRecording(false);
-      setStatus('Recording stopped');
     } else {
       setTranscript('');
       recognitionRef.current.start();
       setIsRecording(true);
       setStatus('Listening...');
     }
-  };
+  }, [isRecording]);
 
-  const footer = (
-    <div className={styles.footerRow}>
-      <Link to="/" className={styles.recordLink}>
-        ← SIGN LANGUAGE MODE
-      </Link>
-      <span>STT_V2.4_ONLINE</span>
-    </div>
-  );
-
-  return (
-    <SplitView
-      leftRatio={leftRatio}
-      onRatioChange={setLeftRatio}
-      left={
-        <STTPane
-          isRecording={isRecording}
-          onToggleRecording={toggleRecording}
-          statusLabel={status}
-        />
-      }
-      right={
-        <OutputPane
-          text={transcript}
-          footer={footer}
-        />
-      }
-    />
-  );
+  return { isRecording, transcript, status, toggleRecording, setTranscript };
 }

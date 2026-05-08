@@ -16,6 +16,8 @@ interface SettingsPanelProps {
   previewTotalStages: number;
   onPlay: (key: string) => void;
   onClearOutput: () => void;
+  currentMode: 'sign' | 'stt';
+  onModeChange: (mode: 'sign' | 'stt') => void;
 }
 
 const KEYS = ['1', '2', '3', '4', '5', '6', '7', '8', '9'] as const;
@@ -53,6 +55,8 @@ export function SettingsPanel({
   previewTotalStages,
   onPlay,
   onClearOutput,
+  currentMode,
+  onModeChange,
 }: SettingsPanelProps) {
   function updateKey(key: string, stages: Stage[]) {
     onChange({ ...overrides, [key]: stagesToSequence(stages) });
@@ -77,6 +81,24 @@ export function SettingsPanel({
             {previewStageIndex + 1}/{previewTotalStages}
           </span>
         )}
+      </div>
+
+      <div className={styles.modeSection}>
+        <span className={styles.sectionLabel}>INPUT MODE</span>
+        <div className={styles.modeButtons}>
+          <button
+            className={`${styles.modeBtn} ${currentMode === 'sign' ? styles.active : ''}`}
+            onClick={() => onModeChange('sign')}
+          >
+            수어 인식
+          </button>
+          <button
+            className={`${styles.modeBtn} ${currentMode === 'stt' ? styles.active : ''}`}
+            onClick={() => onModeChange('stt')}
+          >
+            음성 인식 (STT)
+          </button>
+        </div>
       </div>
 
       <div className={styles.list}>

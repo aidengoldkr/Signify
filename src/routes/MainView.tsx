@@ -1,14 +1,15 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
-import { Link } from 'react-router-dom';
 import type { HandFrame } from '@/types/gesture';
 import { SplitView } from '@/components/SplitView';
 import { ViewportPane } from '@/components/ViewportPane';
+import { STTPane } from '@/components/STTPane';
 import { OutputPane } from '@/components/OutputPane';
 import { SettingsPanel } from '@/components/SettingsPanel';
 import { useCamera } from '@/hooks/useCamera';
 import { useMediaPipe } from '@/hooks/useMediaPipe';
 import { useGestureMatcher } from '@/hooks/useGestureMatcher';
 import { useKeyboardOverride } from '@/hooks/useKeyboardOverride';
+import { useSTT } from '@/hooks/useSTT';
 import { prepareLibrary } from '@/lib/matcher';
 import { snapshots } from '@/data/snapshots';
 import { overrides as defaultOverrides, type OverrideSequence } from '@/data/overrides';
@@ -16,6 +17,7 @@ import styles from './MainView.module.css';
 
 const STORAGE_KEY = 'signify.overrides.v1';
 const LAYOUT_KEY = 'signify.layout.v1';
+const MODE_KEY = 'signify.mode.v1';
 
 function loadOverrides(): Record<string, OverrideSequence> {
   try {
@@ -41,8 +43,16 @@ function loadLeftRatio(): number {
   return 0.6;
 }
 
+function loadMode(): 'sign' | 'stt' {
+  const raw = localStorage.getItem(MODE_KEY);
+  return raw === 'stt' ? 'stt' : 'sign';
+}
+
 export function MainView() {
+  const [appMode, setAppMode] = useState<'sign' | 'stt'>(() => loadMode());
   const { videoRef, ready: cameraReady, error: cameraError, toggleCamera } = useCamera();
+  const { isRecording, transcript, status: sttStatus, toggleRecording, setTranscript } = useSTT();
+  
   const [hands, setHands] = useState<HandFrame[]>([]);
   const latencyBufRef = useRef<number[]>([]);
   const [latencyP50, setLatencyP50] = useState(0);
@@ -51,6 +61,10 @@ export function MainView() {
     () => loadOverrides(),
   );
   const [leftRatio, setLeftRatio] = useState<number>(() => loadLeftRatio());
+
+  useEffect(() => {
+    localStorage.setItem(MODE_KEY, appMode);
+  }, [appMode]);
 
   useEffect(() => {
     try {
@@ -72,7 +86,7 @@ export function MainView() {
 
   const { status: mpStatus, error: mpError } = useMediaPipe({
     videoRef,
-    enabled: cameraReady,
+    enabled: cameraReady && appMode === 'sign',
     onHands: (frames) => {
       setHands(frames);
       pushHands(frames);
@@ -89,25 +103,24 @@ export function MainView() {
     },
   });
 
-  const displayText =
-    override ??
-    (result.kind === 'match' ? result.label : '');
+  const displayText = appMode === 'stt' 
+    ? transcript 
+    : (override ?? (result.kind === 'match' ? result.label : ''));
 
-  const loadingLabel =
-    !cameraReady && !cameraError
+  const loadingLabel = appMode === 'sign' 
+    ? (!cameraReady && !cameraError
       ? '카메라 준비 중...'
       : cameraReady && mpStatus === 'loading'
         ? '핸드 트래커 로딩 중...'
-        : null;
+        : null)
+    : null;
 
-  const errorLabel = cameraError ?? mpError;
+  const errorLabel = appMode === 'sign' ? (cameraError ?? mpError) : null;
 
   const footer = (
     <div className={styles.footerRow}>
-      <Link to="/stt" className={styles.recordLink}>
-        SWITCH TO STT MODE →
-      </Link>
-      <span>지연 p50: {latencyP50.toFixed(1)}ms</span>
+      <span>MODE: {appMode === 'sign' ? 'SIGN_LANGUAGE' : 'STT_VOICE'}</span>
+      {appMode === 'sign' && <span>지연 p50: {latencyP50.toFixed(1)}ms</span>}
     </div>
   );
 
@@ -116,13 +129,22 @@ export function MainView() {
       leftRatio={leftRatio}
       onRatioChange={setLeftRatio}
       left={
-        <ViewportPane
-          videoRef={videoRef}
-          hands={hands}
-          loadingLabel={loadingLabel}
-          errorLabel={errorLabel}
-          onToggleCamera={toggleCamera}
-        />
+        appMode === 'sign' ? (
+          <ViewportPane
+            videoRef={videoRef}
+            hands={hands}
+            loadingLabel={loadingLabel}
+            errorLabel={errorLabel}
+            onToggleCamera={toggleCamera}
+            facingMode={facingMode}
+          />
+        ) : (
+          <STTPane
+            isRecording={isRecording}
+            onToggleRecording={toggleRecording}
+            statusLabel={sttStatus}
+          />
+        )
       }
       right={
         showSettings ? (
@@ -134,12 +156,18 @@ export function MainView() {
             previewText={override}
             previewStageIndex={stageIndex}
             previewTotalStages={totalStages}
+            currentMode={appMode}
+            onModeChange={(m) => {
+              setAppMode(m);
+              if (m === 'stt') setTranscript('');
+            }}
             onPlay={(key) => {
               playKey(key);
               setShowSettings(false);
             }}
             onClearOutput={() => {
-              clearOverride();
+              if (appMode === 'stt') setTranscript('');
+              else clearOverride();
               setShowSettings(false);
             }}
           />
