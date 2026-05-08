@@ -1,4 +1,5 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
+import { Link } from 'react-router-dom';
 import type { HandFrame } from '@/types/gesture';
 import { SplitView } from '@/components/SplitView';
 import { ViewportPane } from '@/components/ViewportPane';
@@ -41,7 +42,7 @@ function loadLeftRatio(): number {
 }
 
 export function MainView() {
-  const { videoRef, ready: cameraReady, error: cameraError } = useCamera();
+  const { videoRef, ready: cameraReady, error: cameraError, toggleCamera } = useCamera();
   const [hands, setHands] = useState<HandFrame[]>([]);
   const latencyBufRef = useRef<number[]>([]);
   const [latencyP50, setLatencyP50] = useState(0);
@@ -103,6 +104,9 @@ export function MainView() {
 
   const footer = (
     <div className={styles.footerRow}>
+      <Link to="/stt" className={styles.recordLink}>
+        SWITCH TO STT MODE →
+      </Link>
       <span>지연 p50: {latencyP50.toFixed(1)}ms</span>
     </div>
   );
@@ -117,6 +121,7 @@ export function MainView() {
           hands={hands}
           loadingLabel={loadingLabel}
           errorLabel={errorLabel}
+          onToggleCamera={toggleCamera}
         />
       }
       right={

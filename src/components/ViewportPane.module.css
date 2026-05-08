@@ -34,3 +34,39 @@
   color: var(--error);
   border-color: rgba(229, 115, 115, 0.4);
 }
+
+.cameraToggle {
+  position: absolute;
+  top: var(--pad-md);
+  right: var(--pad-md);
+  width: 44px;
+  height: 44px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(20, 20, 20, 0.4);
+  backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  border-radius: 50%;
+  color: var(--fg);
+  cursor: pointer;
+  transition: all 0.2s ease;
+  z-index: 10;
+}
+
+.cameraToggle:hover {
+  background: rgba(40, 40, 40, 0.6);
+  border-color: var(--accent);
+  color: var(--accent);
+  transform: scale(1.05);
+}
+
+.cameraToggle:active {
+  transform: scale(0.95);
+}
+
+.cameraToggle svg {
+  width: 20px;
+  height: 20px;
+  opacity: 0.85;
+}
