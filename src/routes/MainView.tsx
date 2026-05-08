@@ -50,7 +50,7 @@ function loadMode(): 'sign' | 'stt' {
 
 export function MainView() {
   const [appMode, setAppMode] = useState<'sign' | 'stt'>(() => loadMode());
-  const { videoRef, ready: cameraReady, error: cameraError, toggleCamera } = useCamera();
+  const { videoRef, ready: cameraReady, error: cameraError, toggleCamera, facingMode } = useCamera();
   const { isRecording, transcript, status: sttStatus, toggleRecording, setTranscript } = useSTT();
   
   const [hands, setHands] = useState<HandFrame[]>([]);

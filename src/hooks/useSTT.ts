@@ -34,7 +34,10 @@ export function useSTT() {
       recognition.onresult = (event: SpeechRecognitionEvent) => {
         let currentTranscript = '';
         for (let i = event.resultIndex; i < event.results.length; i++) {
-          currentTranscript += event.results[i][0].transcript;
+          const result = event.results[i];
+          if (result && result[0]) {
+            currentTranscript += result[0].transcript;
+          }
         }
         setTranscript(currentTranscript);
       };
