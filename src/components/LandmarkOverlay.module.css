@@ -5,5 +5,8 @@
   height: 100%;
   object-fit: contain;
   pointer-events: none;
+}
+
+.mirrored {
   transform: scaleX(-1);
 }

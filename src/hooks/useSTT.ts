@@ -18,6 +18,7 @@ interface SpeechRecognition extends EventTarget {
 
 export function useSTT() {
   const [isRecording, setIsRecording] = useState(false);
+  const isRecordingRef = useRef(false);
   const [transcript, setTranscript] = useState('');
   const [status, setStatus] = useState<string | null>(null);
   const recognitionRef = useRef<SpeechRecognition | null>(null);
@@ -43,13 +44,26 @@ export function useSTT() {
       };
 
       recognition.onerror = (event: any) => {
+        if (event.error === 'no-speech') return; // Ignore no-speech errors to avoid stopping
         console.error('Speech recognition error:', event.error);
         setStatus(`Error: ${event.error}`);
-        setIsRecording(false);
+        if (event.error !== 'aborted') {
+          setIsRecording(false);
+          isRecordingRef.current = false;
+        }
       };
 
       recognition.onend = () => {
-        setIsRecording(false);
+        // Auto-restart if it ended but we're still in recording mode
+        if (isRecordingRef.current && recognitionRef.current) {
+          try {
+            recognitionRef.current.start();
+          } catch (e) {
+            console.error('Failed to restart recognition:', e);
+          }
+        } else {
+          setIsRecording(false);
+        }
       };
 
       recognitionRef.current = recognition;
@@ -58,6 +72,7 @@ export function useSTT() {
     }
 
     return () => {
+      isRecordingRef.current = false;
       if (recognitionRef.current) {
         recognitionRef.current.stop();
       }
@@ -68,10 +83,12 @@ export function useSTT() {
     if (!recognitionRef.current) return;
 
     if (isRecording) {
+      isRecordingRef.current = false;
       recognitionRef.current.stop();
       setIsRecording(false);
     } else {
       setTranscript('');
+      isRecordingRef.current = true;
       recognitionRef.current.start();
       setIsRecording(true);
       setStatus('Listening...');

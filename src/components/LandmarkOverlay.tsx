@@ -7,9 +7,10 @@ interface LandmarkOverlayProps {
   hands: HandFrame[];
   width: number;
   height: number;
+  facingMode?: 'user' | 'environment';
 }
 
-export function LandmarkOverlay({ hands, width, height }: LandmarkOverlayProps) {
+export function LandmarkOverlay({ hands, width, height, facingMode = 'user' }: LandmarkOverlayProps) {
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
 
   useEffect(() => {
@@ -46,7 +47,7 @@ export function LandmarkOverlay({ hands, width, height }: LandmarkOverlayProps) 
       ref={canvasRef}
       width={width}
       height={height}
-      className={styles.overlay}
+      className={`${styles.overlay} ${facingMode === 'user' ? styles.mirrored : ''}`}
     />
   );
 }

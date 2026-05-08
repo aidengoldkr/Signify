@@ -39,8 +39,21 @@
 .textWrap {
   flex: 1;
   display: flex;
-  align-items: center;
+  flex-direction: column;
+  align-items: flex-start;
   justify-content: flex-start;
+  overflow-y: auto;
+  padding-bottom: var(--pad-md);
+}
+
+/* Hide scrollbar for cleaner "prop" look but keep functionality */
+.textWrap::-webkit-scrollbar {
+  width: 4px;
+}
+
+.textWrap::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 2px;
 }
 
 .text {

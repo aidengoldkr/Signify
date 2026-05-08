@@ -1,4 +1,4 @@
-import type { ReactNode } from 'react';
+import { useEffect, useRef, type ReactNode } from 'react';
 import styles from './OutputPane.module.css';
 
 interface OutputPaneProps {
@@ -8,14 +8,22 @@ interface OutputPaneProps {
 }
 
 export function OutputPane({ text, footer, onOpenSettings }: OutputPaneProps) {
+  const scrollRef = useRef<HTMLDivElement | null>(null);
+
+  useEffect(() => {
+    if (scrollRef.current) {
+      scrollRef.current.scrollTop = scrollRef.current.scrollHeight;
+    }
+  }, [text]);
+
   return (
     <div className={styles.wrap}>
       <div className={styles.statusRow}>
         <div className={styles.spacer} />
       </div>
-      <div className={styles.textWrap}>
+      <div className={styles.textWrap} ref={scrollRef}>
         {text ? (
-          <p key={text} className={styles.text}>{text}</p>
+          <p className={styles.text}>{text}</p>
         ) : (
           <p className={styles.placeholder}>…</p>
         )}

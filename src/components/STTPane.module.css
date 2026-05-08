@@ -80,8 +80,33 @@
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  gap: 64px;
+  gap: 48px;
   z-index: 1;
+}
+
+.toggleContainer {
+  display: flex;
+  align-items: center;
+  gap: 24px;
+}
+
+.toggleLabel {
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--fg-dim);
+  opacity: 0.3;
+  transition: all 0.3s ease;
+  width: 40px;
+  text-align: center;
+}
+
+.toggleLabel.active {
+  opacity: 1;
+  color: var(--fg);
+}
+
+.toggleLabel.active:last-child {
+  color: var(--accent);
 }
 
 .micButton {
@@ -159,7 +184,18 @@
   background: var(--accent);
   border-radius: 2px;
   opacity: 0.6;
-  transition: height 0.1s ease;
+  height: 4px;
+  transition: all 0.3s ease;
+}
+
+.recording ~ .waveform .bar,
+.waveform .bar.animating {
+  animation: wave 1s ease-in-out infinite;
+}
+
+@keyframes wave {
+  0%, 100% { height: 8px; opacity: 0.4; }
+  50% { height: 32px; opacity: 0.8; }
 }
 
 .statusBadge {

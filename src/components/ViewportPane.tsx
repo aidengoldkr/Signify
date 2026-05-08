@@ -44,7 +44,7 @@ export function ViewportPane({
         muted
         playsInline
       />
-      <LandmarkOverlay hands={hands} width={dims.w} height={dims.h} />
+      <LandmarkOverlay hands={hands} width={dims.w} height={dims.h} facingMode={facingMode} />
       
       {onToggleCamera && (
         <button 
